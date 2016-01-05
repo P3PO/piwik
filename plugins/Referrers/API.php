@@ -274,7 +274,13 @@ class API extends \Piwik\Plugin\API
 
     public function getKeywordsFromCampaignId($idSite, $period, $date, $idSubtable, $segment = false)
     {
+        $campaigns = $this->getCampaigns($idSite, $period, $date, $segment);
+        $campaigns->applyQueuedFilters();
+        $campaign  = $campaigns->getRowFromIdSubDataTable($idSubtable)->getColumn('label');
+
         $dataTable = $this->getDataTable(Archiver::CAMPAIGNS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        $dataTable->filter('AddSegmentByLabel', array('referrerKeyword'));
+        $dataTable->queueFilter('PrependSegment', array('referrerName=='.$campaign.';referrerType==campaign;'));
         return $dataTable;
     }
 
