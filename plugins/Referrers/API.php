@@ -106,6 +106,15 @@ class API extends \Piwik\Plugin\API
         // set subtable IDs for each row to the label (which holds the int referrer type)
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\SetGetReferrerTypeSubtables', array($idSite, $period, $date, $segment, $expanded));
 
+        $dataTable->filter('AddSegmentByLabelMapping', array(
+            'referrerType',
+            array(
+                Common::REFERRER_TYPE_DIRECT_ENTRY  => 'direct',
+                Common::REFERRER_TYPE_CAMPAIGN      => 'campaign',
+                Common::REFERRER_TYPE_SEARCH_ENGINE => 'search',
+                Common::REFERRER_TYPE_WEBSITE       => 'website',
+            )
+        ));
         // set referrer type column to readable value
         $dataTable->queueFilter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\getReferrerTypeLabel'));
 
