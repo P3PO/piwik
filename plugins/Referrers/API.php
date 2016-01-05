@@ -218,9 +218,12 @@ class API extends \Piwik\Plugin\API
     public function getSearchEnginesFromKeywordId($idSite, $period, $date, $idSubtable, $segment = false)
     {
         $dataTable = $this->getDataTable(Archiver::KEYWORDS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        $keywords  = $this->getKeywords($idSite, $period, $date, $segment);
+        $keyword   = $keywords->getRowFromIdSubDataTable($idSubtable)->getColumn('label');
 
-        $keywords = $this->getKeywords($idSite, $period, $date, $segment);
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\SearchEnginesFromKeywordId', array($keywords, $idSubtable));
+        $dataTable->filter('AddSegmentByLabel', array('referrerName'));
+        $dataTable->queueFilter('PrependSegment', array('referrerKeyword=='.$keyword.';referrerType==search;'));
 
         return $dataTable;
     }
