@@ -253,8 +253,11 @@ class API extends \Piwik\Plugin\API
         // get the search engine and create the URL to the search result page
         $searchEngines = $this->getSearchEngines($idSite, $period, $date, $segment);
         $searchEngines->applyQueuedFilters();
+        $searchEngine  = $searchEngines->getRowFromIdSubDataTable($idSubtable)->getColumn('label');
 
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\KeywordsFromSearchEngineId', array($searchEngines, $idSubtable));
+        $dataTable->filter('AddSegmentByLabel', array('referrerKeyword'));
+        $dataTable->queueFilter('PrependSegment', array('referrerName=='.$searchEngine.';referrerType==search;'));
 
         return $dataTable;
     }
