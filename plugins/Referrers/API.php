@@ -295,6 +295,7 @@ class API extends \Piwik\Plugin\API
     {
         $dataTable = $this->getDataTable(Archiver::WEBSITES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\UrlsFromWebsiteId');
+        $dataTable->filter('AddSegmentByLabel', array('referrerUrl'));
 
         return $dataTable;
     }
