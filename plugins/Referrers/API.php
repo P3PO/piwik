@@ -382,6 +382,7 @@ class API extends \Piwik\Plugin\API
         // merge the datatable's subtables which contain the individual URLs
         $dataTable = $dataTable->mergeSubtables();
 
+        $dataTable->filter('AddSegmentByLabel', array('referrerUrl'));
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\UrlsForSocial', array($expanded));
 
         return $dataTable;
